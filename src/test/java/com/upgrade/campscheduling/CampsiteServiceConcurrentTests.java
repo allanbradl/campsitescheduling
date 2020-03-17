@@ -17,7 +17,7 @@ public class CampsiteServiceConcurrentTests extends AbstractTestNGSpringContextT
 	private CampsiteReservationService campsiteReservationService;
 
 	@Test(threadPoolSize = 10, invocationCount = 10, timeOut = 1000)
-	public void saveCampsiteReservationSuccess() {
+	public void saveCampsiteReservationConcurrent() {
 		CampsiteReservation s = new CampsiteReservation();
 		s.setStartDate(LocalDate.parse("2020-03-20"));
 		s.setEndDate(LocalDate.parse("2020-03-22"));
