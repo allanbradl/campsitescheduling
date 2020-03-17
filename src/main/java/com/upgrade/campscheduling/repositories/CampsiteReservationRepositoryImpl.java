@@ -28,14 +28,14 @@ public class CampsiteReservationRepositoryImpl implements CampsiteReservationRep
 	
 	@Override
 	public NavigableMap<LocalDate, Long> getCampsiteReservationsBetween(LocalDate start, LocalDate end) {
-		NavigableMap<LocalDate, Long> reserverdDaysInRange = campsiteReservations.subMap(start, true, end, true);
-		return reserverdDaysInRange;
+		NavigableMap<LocalDate, Long> reservedDaysInRange = campsiteReservations.subMap(start, true, end, true);
+		return reservedDaysInRange;
 	}
 
 	@Override
 	public CampsiteReservation saveCampsiteReservation(CampsiteReservation campsiteReservationToBeCreated) {
 		// DB save.
-		campsiteReservationRepository.save(campsiteReservationToBeCreated);
+		campsiteReservationToBeCreated = campsiteReservationRepository.save(campsiteReservationToBeCreated);
 		// Memory save.
 		this.saveCampsiteReservationInMemory(campsiteReservationToBeCreated);
 		return campsiteReservationToBeCreated;
