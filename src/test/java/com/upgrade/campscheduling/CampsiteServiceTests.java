@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,15 +55,11 @@ public class CampsiteServiceTests {
 		when(campsiteReservationRepositoryMock.saveCampsiteReservation(newReservation))
 				.thenReturn(newReservationWithId);
 
-		try {
-			newReservation = campsiteReservationService.save(newReservation);
-			Assert.assertTrue(newReservation.getId() == newReservationWithId.getId());
-		} catch (SchedulingException e) {
-			e.printStackTrace();
-		}
+		newReservation = campsiteReservationService.save(newReservation);
+		Assert.assertTrue(newReservation.getId() == newReservationWithId.getId());
 	}
 
-	@Test(expected = SchedulingException.class)
+	@Test
 	public void saveCampsiteReservationDatesAlreadyTaken() throws SchedulingException {
 		LocalDate reservationStart = LocalDate.parse("2020-03-20");
 		LocalDate reservationEnd = LocalDate.parse("2020-03-22");
@@ -80,10 +77,12 @@ public class CampsiteServiceTests {
 		when(campsiteReservationRepositoryMock.getCampsiteReservationsBetween(reservationStart, reservationEnd))
 				.thenReturn(response);
 
-		campsiteReservationService.save(existingReservation);
+		Assertions.assertThrows(SchedulingException.class, () -> {
+			campsiteReservationService.save(existingReservation);
+	    });
 	}
 
-	@Test(expected = SchedulingException.class)
+	@Test
 	public void saveCampsiteReservationInvalidDuration() throws SchedulingException {
 		CampsiteReservation s = new CampsiteReservation();
 		s.setStartDate(LocalDate.parse("2020-03-20"));
@@ -91,10 +90,12 @@ public class CampsiteServiceTests {
 		s.setArrivalDate(LocalDate.parse("2020-03-19"));
 		s.setDepartureDate(LocalDate.parse("2020-04-10"));
 		s.setEmail("mytest@email.com");
-		campsiteReservationService.save(s);
+		Assertions.assertThrows(SchedulingException.class, () -> {
+			campsiteReservationService.save(s);
+	    });
 	}
 
-	@Test(expected = SchedulingException.class)
+	@Test
 	public void saveCampsiteReservationInvalidArrivalDateMin() throws SchedulingException {
 		CampsiteReservation s = new CampsiteReservation();
 		s.setStartDate(LocalDate.parse("2020-03-20"));
@@ -102,10 +103,12 @@ public class CampsiteServiceTests {
 		s.setArrivalDate(LocalDate.parse("2020-03-20"));
 		s.setDepartureDate(LocalDate.parse("2020-04-10"));
 		s.setEmail("mytest@email.com");
-		campsiteReservationService.save(s);
+		Assertions.assertThrows(SchedulingException.class, () -> {
+			campsiteReservationService.save(s);
+	    });
 	}
 
-	@Test(expected = SchedulingException.class)
+	@Test
 	public void saveCampsiteReservationInvalidArrivalDateMax() throws SchedulingException {
 		CampsiteReservation s = new CampsiteReservation();
 		s.setStartDate(LocalDate.parse("2020-03-20"));
@@ -113,7 +116,9 @@ public class CampsiteServiceTests {
 		s.setArrivalDate(LocalDate.parse("2020-02-18"));
 		s.setDepartureDate(LocalDate.parse("2020-04-10"));
 		s.setEmail("mytest@email.com");
-		campsiteReservationService.save(s);
+		Assertions.assertThrows(SchedulingException.class, () -> {
+			campsiteReservationService.save(s);
+	    });
 	}
 
 }
