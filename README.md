@@ -7,4 +7,5 @@ Campsite scheduling application.
 mvn spring-boot:run
 
 ## Concurrency testing
-Mira **Deployment** para conocer como desplegar el proyecto.
+
+Concurrency tests throw that when firing 10 simultaneous reservations requests for the same dates, 1 of them gets created but the rest (9) get an error.
